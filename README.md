@@ -14,21 +14,58 @@
 
 CPA 管理面板（CPAMC 或 CPAMP）插件商店搜索安装 `cpa-codex-candy-eval`，并在面板左侧打开「Codex 降智测试」。
 
+### 安装 Joseph Fork（无需等待 upstream）
+
+此 fork 的商店来源：
+
+```text
+https://raw.githubusercontent.com/josephcy95/cpa-plugin-codex-candy-eval/main/registry.json
+```
+
+在 CPA 的 `config.yaml` 已有 `plugins` 节点中添加来源（保留其他配置）：
+
+```yaml
+plugins:
+  enabled: true
+  store-sources:
+    - "https://raw.githubusercontent.com/josephcy95/cpa-plugin-codex-candy-eval/main/registry.json"
+```
+
+重启 CPA，刷新插件商店，搜索 **Codex 降智测试 · Joseph Fork**，安装
+`0.3.4` 或更新版本。CPA 从本仓库的 Release 下载当前平台的 ZIP 并校验
+`checksums.txt`；不需要手动复制或备份 `.so`。安装后按面板提示重启 CPA。
+默认官方来源仍然保留。
+
+如果已经通过官方来源安装同 ID 的插件，CPA 会限制跨来源更新。要保留
+现有插件配置和历史，可在 `plugins.configs.cpa-codex-candy-eval.store`
+中仅修改以下来源字段，保留已有 `version`、`release-tag` 和其他字段：
+
+```yaml
+source-id: "source-5fbea05af2fb"
+source-url: "https://raw.githubusercontent.com/josephcy95/cpa-plugin-codex-candy-eval/main/registry.json"
+repository: "https://github.com/josephcy95/cpa-plugin-codex-candy-eval"
+```
+
+这一步表示主动选择信任此 fork 的来源；不会移动或删除插件库。重启 CPA
+后，在 Joseph Fork 条目点击更新，商店会保存新版本的安装记录。历史继续使用相同插件 ID，保存在原来的
+`plugins/cpa-codex-candy-eval-state.json` 文件中。
+若 CPA 或管理面板不支持 `store-sources`，需先升级到支持自定义来源的版本。
+
 ### 人工安装
 
 进入 CPA 工作目录，执行对应的安装命令。macOS 和 Linux：
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/haowang02/cpa-plugin-codex-candy-eval/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/josephcy95/cpa-plugin-codex-candy-eval/main/install.sh | sh
 ```
 
 Windows 请先停止 CPA，再在 PowerShell 中运行：
 
 ```powershell
-irm https://raw.githubusercontent.com/haowang02/cpa-plugin-codex-candy-eval/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/josephcy95/cpa-plugin-codex-candy-eval/main/install.ps1 | iex
 ```
 
-也可以从 [Releases](https://github.com/haowang02/cpa-plugin-codex-candy-eval/releases/latest) 下载对应平台的压缩包，解压后将插件文件重命名为 `cpa-codex-candy-eval-v<版本号>.<扩展名>`，放入对应的 `plugins/<系统>/<架构>/` 目录。
+也可以从 [Releases](https://github.com/josephcy95/cpa-plugin-codex-candy-eval/releases/latest) 下载对应平台的压缩包，解压后将插件文件重命名为 `cpa-codex-candy-eval-v<版本号>.<扩展名>`，放入对应的 `plugins/<系统>/<架构>/` 目录。
 
 在 CPA 的 `config.yaml` 中启用插件：
 

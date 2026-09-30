@@ -14,7 +14,7 @@ import (
 
 const (
 	pluginID       = "cpa-codex-candy-eval"
-	pluginVersion  = "0.3.3"
+	pluginVersion  = "0.3.4"
 	ABIVersion     = 1
 	schemaVersion  = 6
 	managementBase = "/v0/management/plugins/" + pluginID
@@ -127,7 +127,7 @@ func HandleMethod(method string, request []byte) (response []byte) {
 				"Name":             pluginID,
 				"Version":          pluginVersion,
 				"Author":           "haowang02",
-				"GitHubRepository": "https://github.com/haowang02/cpa-plugin-codex-candy-eval",
+				"GitHubRepository": "https://github.com/josephcy95/cpa-plugin-codex-candy-eval",
 				"Logo":             "data:image/svg+xml;base64," + base64.StdEncoding.EncodeToString([]byte(logoSVG)),
 				"ConfigFields":     []any{},
 			},

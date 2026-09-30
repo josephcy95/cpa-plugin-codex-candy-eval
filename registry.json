@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "plugins": [
+    {
+      "id": "cpa-codex-candy-eval",
+      "name": "Codex 降智测试 · Joseph Fork",
+      "description": "糖果测试、模型指纹和 ModelTrace；支持 PLUS/PRO/TEAM 快速选择与账户停用。",
+      "author": "josephcy95 (fork of haowang02)",
+      "version": "0.3.4",
+      "repository": "https://github.com/josephcy95/cpa-plugin-codex-candy-eval",
+      "homepage": "https://github.com/josephcy95/cpa-plugin-codex-candy-eval",
+      "license": "MIT",
+      "tags": [
+        "codex",
+        "evaluation",
+        "fork"
+      ]
+    }
+  ]
+}

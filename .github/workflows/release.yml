@@ -1,9 +1,18 @@
 name: Release
 
 on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to build and publish
+        required: true
+        type: string
   push:
     tags:
       - "v*"
+
+env:
+  RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
 
 permissions:
   contents: read
@@ -14,11 +23,13 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/setup-go@v7
         with:
           go-version-file: go.mod
       - name: Check tag matches plugin version
-        run: grep -q "pluginVersion *= \"${GITHUB_REF_NAME#v}\"" internal/plugin/plugin.go
+        run: grep -q "pluginVersion *= \"${RELEASE_TAG#v}\"" internal/plugin/plugin.go
       - run: go vet ./...
       - run: go test -race ./...
       - run: node scripts/test-ui.cjs
@@ -38,6 +49,8 @@ jobs:
           - { os: windows, arch: amd64, runner: windows-2025, ext: dll }
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag || github.ref }}
       - uses: actions/setup-go@v7
         with:
           go-version-file: go.mod
@@ -64,14 +77,14 @@ jobs:
       - name: Package
         if: matrix.os != 'windows'
         run: |
-          name="cpa-codex-candy-eval_${GITHUB_REF_NAME#v}_${{ matrix.os }}_${{ matrix.arch }}"
+          name="cpa-codex-candy-eval_${RELEASE_TAG#v}_${{ matrix.os }}_${{ matrix.arch }}"
           tar -czf "$name.tar.gz" -C dist cpa-codex-candy-eval.${{ matrix.ext }}
           zip -j "$name.zip" dist/cpa-codex-candy-eval.${{ matrix.ext }}
 
       - name: Package
         if: matrix.os == 'windows'
         shell: pwsh
-        run: Compress-Archive -Path dist/cpa-codex-candy-eval.dll -DestinationPath "cpa-codex-candy-eval_$($env:GITHUB_REF_NAME.TrimStart('v'))_windows_amd64.zip"
+        run: Compress-Archive -Path dist/cpa-codex-candy-eval.dll -DestinationPath "cpa-codex-candy-eval_$($env:RELEASE_TAG.TrimStart('v'))_windows_amd64.zip"
 
       - uses: actions/upload-artifact@v7
         with:
@@ -95,5 +108,6 @@ jobs:
         run: sha256sum * > checksums.txt
       - uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
           files: assets/*
           generate_release_notes: true
